@@ -1,0 +1,24 @@
+﻿@model Dronewebshop.Models.ProductRepository
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body class="m-3">
+
+    <h1>Droneshop.be - Catalogus</h1>
+
+    <form asp-action="Index" asp-controller="Home">
+        <table>
+
+        </table>
+        <input type="submit" value="Bekijk de inhoud van het winkelmandje"/>
+    </form>
+    <a asp-action="Afmelden">Afmelden</a>
+</body>
+</html>
