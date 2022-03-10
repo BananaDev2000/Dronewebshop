@@ -14,11 +14,30 @@
     <h1>Droneshop.be - Catalogus</h1>
 
     <form asp-action="Index" asp-controller="Home">
-        <table>
+        <table class="table">
+        <tr class="">
+            <td>ArtNr</td>
+            <td>Naam</td>
+            <td>Foto</td>
+            <td>Verkoopprijs</td>
+            <td>Voorraad</td>
+            <td></td>
+        </tr>
+                    @foreach (var product in Model.Producten)
+            {
+                <tr>
+                    <td>@product.ArtNr</td>
+                    <td>@product.Naam</td>
+                    <td><img src="@Url.Content("~/images/" + product.Fotonaam + ".jpg")"/></td>
+                    <td>@product.Prijs</td>
+                    <td>@product.Voorraad</td>
+                    <td><a>Voeg toe aan winkelmandje...</a></td>
+                </tr>
+            }
 
         </table>
         <input type="submit" value="Bekijk de inhoud van het winkelmandje"/>
     </form>
-    <a asp-action="Afmelden">Afmelden</a>
-</body>
+        <a asp-action="Afmelden">Afmelden</a>
+    </body>
 </html>

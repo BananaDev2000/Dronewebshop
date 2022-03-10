@@ -6,6 +6,7 @@
         public string Naam {get;set;}
         public double Prijs { get; set; }
         public IFormFile Foto {get;set;}
+        public string Fotonaam { get; set; }
         public int Voorraad {get;set;}
 
     }
