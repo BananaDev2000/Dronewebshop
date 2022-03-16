@@ -28,16 +28,25 @@
                 <tr>
                     <td>@product.ArtNr</td>
                     <td>@product.Naam</td>
-                    <td><img src="@Url.Content("~/images/" + product.Fotonaam + ".jpg")"/></td>
+                    <td><img class="fotocat" src="@Url.Content("~/images/" + product.Fotonaam + ".jpg")"/></td>
                     <td>@product.Prijs</td>
                     <td>@product.Voorraad</td>
-                    <td><a>Voeg toe aan winkelmandje...</a></td>
+                    <td>
+                        @if (product.Voorraad >0)
+                        {
+                            <a asp-action="Toevoegen" asp-route-pid="@product.ArtNr">Voeg toe aan winkelmandje...</a>
+                        }
+                        else
+                        {
+                            <p>Niet in voorraad</p>
+                        }
+                    </td>
                 </tr>
             }
 
         </table>
-        <input type="submit" value="Bekijk de inhoud van het winkelmandje"/>
+        <input class="justify-content-center" type="submit" value="Bekijk de inhoud van het winkelmandje"/>
     </form>
-        <a asp-action="Afmelden">Afmelden</a>
+        <a class="justify-content-center" asp-action="Afmelden">Afmelden</a>
     </body>
 </html>

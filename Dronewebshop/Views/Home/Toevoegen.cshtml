@@ -1,0 +1,42 @@
+﻿@model Dronewebshop.Models.VMToevoegen
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+        <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <title>Toevoegen</title>
+</head>
+<body>
+
+    <h1>Droneshop.be - Tovoegen aan winkelmand</h1>
+    <form asp-action="Toevoegen">
+        <table class="table" style="right:0px;">
+            <tr>
+                <td rowspan="4"><img src="@Url.Content("~/images/" + Model.Product.Fotonaam + ".jpg")"/></td>
+                <td>ArtNr:</td>
+                <td>@Model.Product.ArtNr</td>
+            </tr>
+            <tr>
+                <td>Naam:</td>
+                <td>@Model.Product.Naam</td>
+            </tr>
+            <tr>
+                <td>Verkoopprijs:</td>
+                <td>@Model.Product.Prijs</td>
+            </tr>
+            <tr>
+                <td>Voorraad:</td>
+                <td>@Model.Product.Voorraad</td>
+            </tr>
+
+        </table>
+
+        <p>Aantal toe te voegen aan de winkelmand: <input type="text" asp-for="aantal"/><input type="submit" value="Voeg toe aan winkelmand"/></p>
+        <a asp-action="Index">Terug naar catalogus</a>
+    </form>
+    @ViewBag.fout
+</body>
+</html>

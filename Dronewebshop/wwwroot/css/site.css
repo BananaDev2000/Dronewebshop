@@ -8,3 +8,17 @@ h1 {
     color:red;
 
 }
+
+.fotocat  {
+
+    max-block-size: 101px;
+    block-size:100px;
+    max-width:100px;
+
+}
+
+.centerbtncat {
+
+    align-content:center;
+
+}
