@@ -28,22 +28,44 @@ namespace Dronewebshop.Controllers
         {
             VMToevoegen vMToevoegen = new VMToevoegen();
             vMToevoegen.Product = pc.loadProduct(pid);
+            HttpContext.Session.SetInt32("ArtNr", pid);
             return View(vMToevoegen);
         }
 
         [HttpPost]
         public IActionResult Toevoegen(VMToevoegen vMToevoegen)
         {
-            vMToevoegen.Product.Voorraad = pc.haalVoorraad(vMToevoegen.Product.ArtNr);
-            if (vMToevoegen.aantal <= vMToevoegen.Product.Voorraad)
+
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Winkelmand");
+
+                int ArtNr = Convert.ToInt32(HttpContext.Session.GetInt32("ArtNr"));
+                vMToevoegen.Product = pc.loadProduct(ArtNr);
+                vMToevoegen.Product.Voorraad = pc.haalVoorraad(ArtNr);
+                if (vMToevoegen.aantal <= vMToevoegen.Product.Voorraad)
+                {
+
+                    WinkelmandItem winkelmandItem = new WinkelmandItem();
+                    winkelmandItem.Aantal = vMToevoegen.aantal;
+                    winkelmandItem.KlantID = HttpContext.Session.GetInt32("ID");
+                    winkelmandItem.ArtNr = vMToevoegen.Product.ArtNr;
+                    pc.voegToe(winkelmandItem);
+                    return RedirectToAction("Winkelmand");
+                }
+                else
+                {
+                    ViewBag.fout = "Te weining voorraad";
+                    return View(vMToevoegen);
+                }
+
             }
             else
             {
-                ViewBag.fout = "Te weining voorraad";
+
                 return View(vMToevoegen);
+
             }
+           
         }
 
     }

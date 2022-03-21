@@ -34,7 +34,7 @@
 
         </table>
 
-        <p>Aantal toe te voegen aan de winkelmand: <input type="text" asp-for="aantal"/><input type="submit" value="Voeg toe aan winkelmand"/></p>
+        <p>Aantal toe te voegen aan de winkelmand: <input type="text" asp-for="aantal" asp-route-pid="@Model.Product.ArtNr"/><input type="submit" value="Voeg toe aan winkelmand"/></p>
         <a asp-action="Index">Terug naar catalogus</a>
     </form>
     @ViewBag.fout
