@@ -13,9 +13,9 @@
 
     <h1>Droneshop.be - Catalogus</h1>
 
-    <form asp-action="Index" asp-controller="Home">
+    <form asp-action="WinkelmandReturn" asp-controller="Home">
         <table class="table">
-        <tr class="">
+        <tr class="bg-primary">
             <td>ArtNr</td>
             <td>Naam</td>
             <td>Foto</td>
@@ -45,8 +45,8 @@
             }
 
         </table>
-        <input class="justify-content-center" type="submit" value="Bekijk de inhoud van het winkelmandje"/>
+        <p class="text-center" ><input class="justify-content-center" type="submit" value="Bekijk de inhoud van het winkelmandje"/></p>
     </form>
-        <a class="justify-content-center" asp-action="Afmelden">Afmelden</a>
+        <p class="text-center" ><a class="justify-content-center" asp-action="Afmelden">Afmelden</a></p>
     </body>
 </html>

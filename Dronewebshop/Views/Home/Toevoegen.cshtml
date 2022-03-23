@@ -15,7 +15,7 @@
     <form asp-action="Toevoegen">
         <table class="table" style="right:0px;">
             <tr>
-                <td rowspan="4"><img src="@Url.Content("~/images/" + Model.Product.Fotonaam + ".jpg")"/></td>
+                <td rowspan="4"><img class="fototoevoegen" src="@Url.Content("~/images/" + Model.Product.Fotonaam + ".jpg")"/></td>
                 <td>ArtNr:</td>
                 <td>@Model.Product.ArtNr</td>
             </tr>
@@ -34,8 +34,8 @@
 
         </table>
 
-        <p>Aantal toe te voegen aan de winkelmand: <input type="text" asp-for="aantal" asp-route-pid="@Model.Product.ArtNr"/><input type="submit" value="Voeg toe aan winkelmand"/></p>
-        <a asp-action="Index">Terug naar catalogus</a>
+        <p class="text-center" >Aantal toe te voegen aan de winkelmand: <input type="text" asp-for="aantal" asp-route-pid="@Model.Product.ArtNr"/><input type="submit" value="Voeg toe aan winkelmand"/></p>
+        <p class="text-center" ><a asp-action="Index">Terug naar catalogus</a></p>
     </form>
     @ViewBag.fout
 </body>

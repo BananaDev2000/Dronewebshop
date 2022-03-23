@@ -68,5 +68,41 @@ namespace Dronewebshop.Controllers
            
         }
 
+        [HttpGet]
+        public IActionResult Winkelmand()
+        {
+            VMWinkelmand vMWinkelmand = new VMWinkelmand();
+            int klantNr = Convert.ToInt32(HttpContext.Session.GetInt32("ID"));
+            vMWinkelmand.gebruiker = pc.haalGebruiker(klantNr);
+            WinkelmandItemRepository winkelmandrepos = new WinkelmandItemRepository();
+            vMWinkelmand.winkelmandItemRepos = winkelmandrepos;
+            winkelmandrepos.winkelmandItems = pc.loadWinkelitems(klantNr);
+            Totalen totalen = new Totalen();
+            foreach(var winkelmandItem in winkelmandrepos.winkelmandItems)
+            {
+                totalen.totaalExcl += winkelmandItem.Totaal;
+                totalen.BTW += (winkelmandItem.Totaal * 0.21);
+            }
+            totalen.totaalIncl = totalen.totaalExcl + totalen.BTW;
+            vMWinkelmand.totalen = totalen;
+            return View(vMWinkelmand);
+
+        }
+
+        public IActionResult Verwijder(int ArtNr, int Aantal)
+        {
+            WinkelmandItem winkelmandItem = new WinkelmandItem();
+            winkelmandItem.ArtNr = ArtNr;
+            winkelmandItem.Aantal = Aantal;
+            winkelmandItem.KlantID = Convert.ToInt32(HttpContext.Session.GetInt32("ID"));
+            pc.Verwijder(winkelmandItem);
+            return RedirectToAction("Winkelmand");
+        }
+
+        public IActionResult WinkelmandReturn()
+        {
+            return RedirectToAction("Winkelmand");
+        }
+
     }
 }
