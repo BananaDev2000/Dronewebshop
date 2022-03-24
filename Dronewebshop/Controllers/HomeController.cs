@@ -104,5 +104,11 @@ namespace Dronewebshop.Controllers
             return RedirectToAction("Winkelmand");
         }
 
+        [HttpPost]
+        public IActionResult Winkelmand(int KlantNr)
+        {
+            KlantNr = Convert.ToInt32(HttpContext.Session.GetInt32("ID"));
+        }
+
     }
 }

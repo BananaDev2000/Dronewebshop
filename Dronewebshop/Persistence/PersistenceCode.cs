@@ -175,5 +175,65 @@ namespace Dronewebshop.Persistence
             cmd.ExecuteNonQuery();
             conn.Close();
         }
+
+        public void maakOrder(int KlantNr)
+        {
+            MySqlConnection conn = new MySqlConnection(connStr);
+            conn.Open();
+            string qry = "insert into tblorder (orderdatum,klantnr) values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + KlantNr + "')";
+            MySqlCommand cmd = new MySqlCommand(qry, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+
+            MySqlConnection con = new MySqlConnection(connStr);
+            con.Open();
+            string qry1 = "select max(ordernr) as laatste from tblorder where klantnr=" + KlantNr;
+            MySqlCommand cmd1 = new MySqlCommand(qry1, con);
+            MySqlDataReader dtr1 = cmd1.ExecuteReader();
+             int OrderNr = 0;
+            while (dtr1.Read())
+            {
+                OrderNr = Convert.ToInt32(dtr1["laatste"]);
+            }
+            con.Close();
+
+            MySqlConnection conn2 = new MySqlConnection(connStr);
+            conn2.Open();
+            string qry2 = "select ArtNr,Aantal,Prijs from tblwinkelmand where klantnr=" + KlantNr;
+            MySqlCommand cmd2 = new MySqlCommand(qry1, conn2);
+            MySqlDataReader dtr2 = cmd1.ExecuteReader();
+            List<WinkelmandItem> lijst = new List<WinkelmandItem>();
+            while (dtr2.Read())
+            {
+                WinkelmandItem wmi = new WinkelmandItem();
+                wmi.ArtNr = Convert.ToInt32(dtr2["ArtNr"]);
+                wmi.Aantal = Convert.ToInt32(dtr2["Aantal"]);
+                wmi.Prijs = Convert.ToDouble(dtr2["Prijs"]); 
+                lijst.Add(wmi);
+            }
+            conn2.Close();
+
+            foreach (var wmi in lijst)
+            {
+                MySqlConnection conn3 = new MySqlConnection(connStr);
+                conn3.Open();
+                string qry3 = "insert into tblorderinfo (ArtNr,OrderNr,Aantal,Prijs) values ('" + wmi.ArtNr + "','" + OrderNr + "','" + wmi.Aantal + "','" + wmi.Prijs + "')";
+                MySqlCommand cmd3 = new MySqlCommand(qry3, conn3);
+                cmd3.ExecuteNonQuery();
+                conn3.Close();  
+            }
+
+
+       //     foreach (var wmi in lijst)
+          //  {
+          //      Order order = new Order();
+            //    order.Aantal = wmi.Aantal;
+              //  order.OudePrijs = wmi.Prijs;
+                //order.ArtNr = wmi.ArtNr;
+                //order.OrderNr = OrderNr;                     
+            //}
+           
+        }
+
     }
 }
