@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Dronewebshop.Persistence;
+using System.Net;
+using System.Net.Mail;
 
 namespace Dronewebshop.Controllers
 {
@@ -10,7 +12,7 @@ namespace Dronewebshop.Controllers
         PersistenceCode pc = new PersistenceCode();
         public IActionResult Index()
         {
-            HttpContext.Session.SetInt32("ID", 1);
+            HttpContext.Session.SetInt32("ID", 2);
             int? id = HttpContext.Session.GetInt32("ID");
             if (id is not null)
             {
@@ -80,10 +82,10 @@ namespace Dronewebshop.Controllers
             Totalen totalen = new Totalen();
             foreach(var winkelmandItem in winkelmandrepos.winkelmandItems)
             {
-                totalen.totaalExcl += winkelmandItem.Totaal;
-                totalen.BTW += (winkelmandItem.Totaal * 0.21);
+                totalen.totaalExcl += Math.Round(winkelmandItem.Totaal,2);
+                totalen.BTW += Math.Round((winkelmandItem.Totaal * 0.21),2);
             }
-            totalen.totaalIncl = totalen.totaalExcl + totalen.BTW;
+            totalen.totaalIncl = Math.Round(totalen.totaalExcl + totalen.BTW,2);
             vMWinkelmand.totalen = totalen;
             return View(vMWinkelmand);
 
@@ -105,9 +107,36 @@ namespace Dronewebshop.Controllers
         }
 
         [HttpPost]
-        public IActionResult Winkelmand(int KlantNr)
+        public IActionResult Winkelmand(Order order)
         {
-            KlantNr = Convert.ToInt32(HttpContext.Session.GetInt32("ID"));
+            int KlantNr = Convert.ToInt32(HttpContext.Session.GetInt32("ID"));
+            order = pc.maakOrder(KlantNr);
+
+            try
+            {
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress("drones@nyrztest.xyz");
+                message.To.Add(new MailAddress("egl.banaan@gmail.com"));
+                message.Subject = "Test";
+                message.IsBodyHtml = true; //to make message body as html  
+                message.Body = "    <h1>Droneshop.be - Bestelbevestiging</h1> < p > We hebben uw bestelling met bestelnummer<strong> @Model.OrderNr </ strong > goed ontvangen.</ p >< p > Na overschrijving van<strong> @Model.totaal</ strong > op rekeningnummer<strong> BE12 3442 0694 2069 </ strong > worden de goederen verpakt en verstuurd.</ p >< p > U ontving deze bevestiging ook via e-mail.</ p > < p > Bedankt voor uw vertouwen! </ p >< p > M.Royer en F. Timmermans </ p > ";
+                smtp.Port = 465;
+                smtp.Host = "mail.zxcs.nl"; //for gmail host  
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential("drones@nyrztest.xyz", "drones");
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Send(message);
+            }
+            catch (Exception) { }
+
+            return RedirectToAction("Bevestiging", order);
+        }
+
+        public IActionResult Bevestiging(Order order)
+        {
+            return View(order);
         }
 
     }

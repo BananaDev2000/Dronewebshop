@@ -1,0 +1,21 @@
+﻿@model Dronewebshop.Models.Order
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+                <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <title>Bevestiging</title>
+</head>
+<body> 
+    <h1>Droneshop.be - Bestelbevestiging</h1>
+    <p>We hebben uw bestelling met bestelnummer<strong> @Model.OrderNr </strong>goed ontvangen.</p>
+    <p>Na overschrijving van<strong> @Model.totaal </strong>op rekeningnummer <strong>BE12 3442 0694 2069</strong> worden de goederen verpakt en verstuurd.</p>
+    <p>U ontving deze bevestiging ook via e-mail.</p>
+    <p>Bedankt voor uw vertouwen!</p>
+    <p>M. Royer en F. Timmermans</p>
+    <p class="text-center"><a asp-action="Index">Terug naar catalogus</a></p>
+</body>
+</html>

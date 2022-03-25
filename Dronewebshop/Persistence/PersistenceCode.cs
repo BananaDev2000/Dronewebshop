@@ -176,7 +176,7 @@ namespace Dronewebshop.Persistence
             conn.Close();
         }
 
-        public void maakOrder(int KlantNr)
+        public Order maakOrder(int KlantNr)
         {
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
@@ -196,12 +196,12 @@ namespace Dronewebshop.Persistence
                 OrderNr = Convert.ToInt32(dtr1["laatste"]);
             }
             con.Close();
-
+            
             MySqlConnection conn2 = new MySqlConnection(connStr);
             conn2.Open();
-            string qry2 = "select ArtNr,Aantal,Prijs from tblwinkelmand where klantnr=" + KlantNr;
-            MySqlCommand cmd2 = new MySqlCommand(qry1, conn2);
-            MySqlDataReader dtr2 = cmd1.ExecuteReader();
+            string qry2 = "select tblwinkelmand.ArtNr,Aantal,Prijs from tblwinkelmand inner join tblproducten on tblwinkelmand.ArtNr = tblproducten.ArtNr where klantnr=" + KlantNr;
+            MySqlCommand cmd2 = new MySqlCommand(qry2, conn2);
+            MySqlDataReader dtr2 = cmd2.ExecuteReader();
             List<WinkelmandItem> lijst = new List<WinkelmandItem>();
             while (dtr2.Read())
             {
@@ -217,22 +217,44 @@ namespace Dronewebshop.Persistence
             {
                 MySqlConnection conn3 = new MySqlConnection(connStr);
                 conn3.Open();
-                string qry3 = "insert into tblorderinfo (ArtNr,OrderNr,Aantal,Prijs) values ('" + wmi.ArtNr + "','" + OrderNr + "','" + wmi.Aantal + "','" + wmi.Prijs + "')";
+                string corrPrijs = wmi.Prijs.ToString();
+                corrPrijs = corrPrijs.Replace(",",".");
+                string qry3 = "insert into tblorderinfo (ArtNr,OrderNr,Aantal,Prijs) values ('" + wmi.ArtNr + "','" + OrderNr + "','" + wmi.Aantal + "','" + corrPrijs + "')";
                 MySqlCommand cmd3 = new MySqlCommand(qry3, conn3);
                 cmd3.ExecuteNonQuery();
                 conn3.Close();  
             }
 
+            MySqlConnection conn5 = new MySqlConnection(connStr);
+            conn5.Open();
+            string qry5 = "select (sum(aantal*prijs)*1.21) as totaal from tblwinkelmand inner join tblproducten on tblwinkelmand.ArtNr = tblproducten.ArtNr where klantNr = " + KlantNr;
+            MySqlCommand cmd5 = new MySqlCommand(qry5, conn5);
+            MySqlDataReader dtr5 = cmd5.ExecuteReader();
+            Order order = new Order();
+            while (dtr5.Read())
+            {
+                order.totaal = Convert.ToDouble(dtr5["totaal"]);
+            }
+            conn5.Close();
+            order.OrderNr = OrderNr;
 
-       //     foreach (var wmi in lijst)
-          //  {
-          //      Order order = new Order();
+            MySqlConnection conn4 = new MySqlConnection(connStr);
+            conn4.Open();
+            string qry4 = "delete from tblwinkelmand where klantnr=" + KlantNr;
+            MySqlCommand cmd4 = new MySqlCommand(qry4, conn4);
+            cmd4.ExecuteNonQuery();
+            conn4.Close();
+
+            //     foreach (var wmi in lijst)
+            //  {
+            //      Order order = new Order();
             //    order.Aantal = wmi.Aantal;
-              //  order.OudePrijs = wmi.Prijs;
-                //order.ArtNr = wmi.ArtNr;
-                //order.OrderNr = OrderNr;                     
+            //  order.OudePrijs = wmi.Prijs;
+            //order.ArtNr = wmi.ArtNr;
+            //order.OrderNr = OrderNr;                     
             //}
-           
+
+            return order;
         }
 
     }
