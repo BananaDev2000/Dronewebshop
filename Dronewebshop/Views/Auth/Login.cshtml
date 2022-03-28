@@ -1,0 +1,32 @@
+﻿@model Dronewebshop.Models.LoginCredentials
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href=~/css/site.css/>
+    <title>Login</title>
+</head>
+<body class="m-3">
+
+            <form asp-action="Login" asp-controller="Auth">
+    <h1 class="centreren">Droneshop.be - Aanmeldpagina</h1>
+        <table class="centreren" >
+            <tr>
+                <td>    Gebruikersnaam: </td>
+                <td class="centreren"><input type="text" asp-for="gebruikersnaam"/></td>
+                <span asp-validation-for="gebruikersnaam"></span>
+            </tr>
+            <tr>
+                <td>Wachtwoord: </td>
+                <td class="centreren"><input type="password" asp-for="wachtwoord"/></td>
+                <span asp-validation-for="wachtwoord"></span>
+            </tr>
+        </table>
+        <p class="centreren"><input type="submit" value="Meld aan..."/></p>
+        @ViewBag.fout
+    </form>
+</body>
+</html>

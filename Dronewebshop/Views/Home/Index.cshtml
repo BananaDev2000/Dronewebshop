@@ -11,7 +11,7 @@
 </head>
 <body class="m-3">
 
-    <h1>Droneshop.be - Catalogus</h1>
+    <h1 class="centreren">Droneshop.be - Catalogus</h1>
 
     <form asp-action="WinkelmandReturn" asp-controller="Home">
         <table class="table">
@@ -47,6 +47,6 @@
         </table>
         <p class="text-center" ><input class="justify-content-center" type="submit" value="Bekijk de inhoud van het winkelmandje"/></p>
     </form>
-        <p class="text-center" ><a class="justify-content-center" asp-action="Afmelden">Afmelden</a></p>
+        <p class="text-center" ><a class="justify-content-center" asp-action="Logout" asp-controller="Auth">Afmelden</a></p>
     </body>
 </html>

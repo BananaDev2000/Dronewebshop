@@ -4,17 +4,19 @@ using System.Diagnostics;
 using Dronewebshop.Persistence;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Dronewebshop.Controllers
 {
     public class HomeController : Controller
     {
         PersistenceCode pc = new PersistenceCode();
+        [Authorize]
+        [HttpGet]
         public IActionResult Index()
         {
-            HttpContext.Session.SetInt32("ID", 2);
-            int? id = HttpContext.Session.GetInt32("ID");
-            if (id is not null)
+            int? UsrId = HttpContext.Session.GetInt32("ID");
+            if (UsrId is not null)
             {
                 ProductRepository productsRepository = new ProductRepository();
                 productsRepository.Producten = pc.loadProducten();
@@ -22,10 +24,11 @@ namespace Dronewebshop.Controllers
             }
             else
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Login","Auth");
             }
         }
-
+        [Authorize]
+        [HttpGet]
         public IActionResult Toevoegen(int pid)
         {
             VMToevoegen vMToevoegen = new VMToevoegen();
@@ -33,7 +36,7 @@ namespace Dronewebshop.Controllers
             HttpContext.Session.SetInt32("ArtNr", pid);
             return View(vMToevoegen);
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult Toevoegen(VMToevoegen vMToevoegen)
         {
@@ -70,6 +73,7 @@ namespace Dronewebshop.Controllers
            
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Winkelmand()
         {
@@ -90,7 +94,8 @@ namespace Dronewebshop.Controllers
             return View(vMWinkelmand);
 
         }
-
+        [Authorize]
+        [HttpGet]
         public IActionResult Verwijder(int ArtNr, int Aantal)
         {
             WinkelmandItem winkelmandItem = new WinkelmandItem();
@@ -100,12 +105,12 @@ namespace Dronewebshop.Controllers
             pc.Verwijder(winkelmandItem);
             return RedirectToAction("Winkelmand");
         }
-
+        [Authorize]
         public IActionResult WinkelmandReturn()
         {
             return RedirectToAction("Winkelmand");
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult Winkelmand(Order order)
         {
@@ -114,30 +119,34 @@ namespace Dronewebshop.Controllers
 
             try
             {
-                MailMessage message = new MailMessage();
-                SmtpClient smtp = new SmtpClient();
-                message.From = new MailAddress("drones@nyrztest.xyz");
-                message.To.Add(new MailAddress("egl.banaan@gmail.com"));
-                message.Subject = "Test";
-                message.IsBodyHtml = true; //to make message body as html  
-                message.Body = "    <h1>Droneshop.be - Bestelbevestiging</h1> < p > We hebben uw bestelling met bestelnummer<strong> @Model.OrderNr </ strong > goed ontvangen.</ p >< p > Na overschrijving van<strong> @Model.totaal</ strong > op rekeningnummer<strong> BE12 3442 0694 2069 </ strong > worden de goederen verpakt en verstuurd.</ p >< p > U ontving deze bevestiging ook via e-mail.</ p > < p > Bedankt voor uw vertouwen! </ p >< p > M.Royer en F. Timmermans </ p > ";
-                smtp.Port = 465;
-                smtp.Host = "mail.zxcs.nl"; //for gmail host  
-                smtp.EnableSsl = true;
-                smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential("drones@nyrztest.xyz", "drones");
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtp.Send(message);
-            }
+                //Mailserver
+                SmtpClient smtpClient = new SmtpClient("smtp.office365.com");
+                smtpClient.Port = 587;
+                smtpClient.Credentials = new System.Net.NetworkCredential("haspo6itn2022@outlook.com", "GIPwebsite");
+                smtpClient.EnableSsl = true;
+                
+                //MailBericht
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.From = new MailAddress("haspo6itn2022@outlook.com");
+                mailMessage.To.Add(order.mail);
+                mailMessage.Subject = "Bestelbevestiging";
+                mailMessage.IsBodyHtml = true;
+                mailMessage.Body = " <h1>Droneshop.be - Bestelbevestiging</h1> <p>We hebben uw bestelling met bestelnummer<strong> " + order.OrderNr + "</strong>goed ontvangen.</p> <p>Na overschrijving van<strong> " + order.totaal + " </strong>op rekeningnummer <strong>BE12 3442 0694 2069</strong> worden de goederen verpakt en verstuurd.</p> <p>U ontving deze bevestiging ook via e-mail.</p> <p>Bedankt voor uw vertouwen!</p> <p>M. Royer en F. Timmermans</p>";
+
+
+                smtpClient.Send(mailMessage);
+                    }
             catch (Exception) { }
 
             return RedirectToAction("Bevestiging", order);
         }
-
+        [Authorize]
+        [HttpGet]
         public IActionResult Bevestiging(Order order)
         {
             return View(order);
         }
+
 
     }
 }

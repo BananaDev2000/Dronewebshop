@@ -2,33 +2,27 @@
 
 
 .fout {
-    color:red;
-    font-weight:bold;
+    color: red;
+    font-weight: bold;
 }
 
 h1 {
-
-    color:red;
-
+    color: #42C2FF;
 }
 
-.fotocat  {
-
+.fotocat {
     max-block-size: 101px;
-    block-size:100px;
-    max-width:100px;
-
+    block-size: 100px;
+    max-width: 100px;
 }
 
 .centerbtncat {
-
-    align-content:center;
-
+    align-content: center;
 }
 
 .fotodelete {
-    width:35px;
-    height:35px;
+    width: 35px;
+    height: 35px;
 }
 
 .fototoevoegen {
@@ -37,5 +31,20 @@ h1 {
 }
 
 strong {
-    color:olive;
+    color: olive;
+}
+
+.centreren {
+    text-align: center;
+    margin: auto;
+    padding: 15px;
+}
+
+body {
+    background-color: #EFFFFD;
+}
+
+td {
+    color: #062C30;
+    font-family: monospace
 }

@@ -245,6 +245,17 @@ namespace Dronewebshop.Persistence
             cmd4.ExecuteNonQuery();
             conn4.Close();
 
+            MySqlConnection conn6 = new MySqlConnection(connStr);
+            conn6.Open();
+            string qry6 = "select Email from tblklanten where klantnr=" + KlantNr;
+            MySqlCommand cmd6 = new MySqlCommand(qry6, conn6);
+            MySqlDataReader dtr6 = cmd6.ExecuteReader();
+            while (dtr6.Read())
+            {
+                order.mail = Convert.ToString(dtr6["Email"]);
+            }
+            conn6.Close();
+
             //     foreach (var wmi in lijst)
             //  {
             //      Order order = new Order();
@@ -257,5 +268,20 @@ namespace Dronewebshop.Persistence
             return order;
         }
 
+        public int checkCredentials(LoginCredentials loginCredentials)
+        {
+            MySqlConnection mySqlConnection = new MySqlConnection(connStr);
+            mySqlConnection.Open();
+            string sql = "select klantnr from tblklanten where Login ='" + loginCredentials.gebruikersnaam + "' and binary Wachtwoord='" + loginCredentials.wachtwoord + "'";
+            MySqlCommand mySqlCommand = new MySqlCommand(sql, mySqlConnection);
+            MySqlDataReader dr = mySqlCommand.ExecuteReader();
+            int usrID = -1;
+            while (dr.Read())
+            {
+                usrID = Convert.ToInt32(dr["KlantNr"]);
+            }
+            mySqlConnection.Close();
+            return usrID;
+        }
     }
 }
