@@ -11,9 +11,11 @@
 </head>
 <body>
 
-    <h1 class="centreren">Droneshop.be - Tovoegen aan winkelmand</h1>
+    <h1 class="centreren">Droneshop.be - Toevoegen aan winkelmand</h1>
     <form asp-action="Toevoegen">
-        <table class="table" style="right:0px;">
+ <div class="ToevoegenDiv">
+
+            <table class="table">
             <tr>
                 <td rowspan="4"><img class="fototoevoegen" src="@Url.Content("~/images/" + Model.Product.Fotonaam + ".jpg")"/></td>
                 <td>ArtNr:</td>
@@ -25,7 +27,7 @@
             </tr>
             <tr>
                 <td>Verkoopprijs:</td>
-                <td>@Model.Product.Prijs</td>
+                <td>€ @Model.Product.Prijs</td>
             </tr>
             <tr>
                 <td>Voorraad:</td>
@@ -34,9 +36,11 @@
 
         </table>
 
+ </div>
+
         <p class="text-center" >Aantal toe te voegen aan de winkelmand: <input type="text" asp-for="aantal" asp-route-pid="@Model.Product.ArtNr"/><input type="submit" value="Voeg toe aan winkelmand"/></p>
         <p class="text-center" ><a asp-action="Index">Terug naar catalogus</a></p>
     </form>
-    @ViewBag.fout
+    <p class="centreren fout">@ViewBag.fout</p>
 </body>
 </html>

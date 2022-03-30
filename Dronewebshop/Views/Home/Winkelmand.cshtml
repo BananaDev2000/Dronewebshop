@@ -10,7 +10,7 @@
     <title>Winkelmand</title>
 </head>
 <body class="m-3">
-    <h1>Droneshop.be - Winkelmand</h1>
+    <h1 class="centreren">Droneshop.be - Winkelmand</h1>
     <form asp-action="Winkelmand">
         <table class="table">
             <tr>
@@ -34,8 +34,9 @@
                 <td>@DateTime.Now</td>
             </tr>
         </table>
+        <div class="Tussenbalk"></div>
         <table class="table">
-            <tr>
+            <tr id="Test">
                 <td></td>
                 <td>Foto</td>
                 <td>ArtNr</td>
@@ -52,26 +53,38 @@
                 <td>@winkelmandItem.ArtNr</td>
                 <td>@winkelmandItem.Naam</td>
                 <td>@winkelmandItem.Aantal</td>
-                <td>@winkelmandItem.Prijs</td>
-                <td>@winkelmandItem.Totaal</td>
-            </tr>
+                <td>€ @winkelmandItem.Prijs</td>
+                <td>€ @winkelmandItem.Totaal</td>
+                </tr>
+                
             }
+
+
+            
         </table>
-        <table style="left:0px;">
+                    @if (Model.winkelmandItemRepos.winkelmandItems.Count == 0)
+            {
+                <p class="centreren" style="color:olive;">Er zit niets in je winkelmandje.</p>
+            }
+            else
+            {
+                      <table class="Totalen">
             <tr>
                 <td>Totaal Excl:</td>
-                <td>@Model.totalen.totaalExcl</td>
+                <td>€ @Model.totalen.totaalExcl</td>
             </tr>
             <tr>
                 <td>BTW (21%):</td>
-                <td>@Model.totalen.BTW</td>
+                <td>€ @Model.totalen.BTW</td>
             </tr>
             <tr>
                 <td>Totaal Incl:</td>
-                <td>@Model.totalen.totaalIncl</td>
+                <td>€ @Model.totalen.totaalIncl</td>
             </tr>
-        </table>
-        <p class="text-center" ><input type="submit" value="Inhoud van het winkelmandje bestellen."/></p>
+        </table>  
+        <p class="text-center fout">@ViewBag.fout</p>
+                <p class="text-center" ><input type="submit" value="Inhoud van het winkelmandje bestellen."/></p>
+            }
         <p class="text-center" ><a asp-action="Index">Terug naar catalogus</a></p>
     </form>
 </body>

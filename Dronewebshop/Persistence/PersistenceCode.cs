@@ -8,6 +8,7 @@ namespace Dronewebshop.Persistence
 
     string connStr = "server=localhost; user id=root; password=Test123; database=dbwebshop";
 
+        //Het stukje code hieronder wordt gebruikt om de producten in te laden zodra index ook geladen wordt.
         public List<Product> loadProducten()
     {
         MySqlConnection conn = new MySqlConnection(connStr);
@@ -30,6 +31,7 @@ namespace Dronewebshop.Persistence
             return list;
     }
 
+        //Hier halen we het product op vanop het moment dat er wordt geklikt op een artikel.
     public Product loadProduct(int ArtNr)
         {
             MySqlConnection conn = new MySqlConnection(connStr);
@@ -50,7 +52,7 @@ namespace Dronewebshop.Persistence
             return product;
         }
 
-        // Winkelmand
+        // We halen de voorraad op uit de databank en tonen deze.
 
         public int haalVoorraad(int ArtNr)
         {
@@ -69,8 +71,10 @@ namespace Dronewebshop.Persistence
             return voorraad;
         }
 
+        //Als er op de knop wordt geduwd voeg toe aan winkelmand in de view toevoegen wordt dit stuk code uitgevoerd
         public void voegToe (WinkelmandItem winkelmandItem)
         {
+            //We halen het artikelNr en klantNr op
             MySqlConnection conn1 = new MySqlConnection(connStr);
             conn1.Open();
             string qry1 = "select * from tblwinkelmand where ArtNr=" + winkelmandItem.ArtNr + " and KlantNr=" + winkelmandItem.KlantID;
@@ -78,6 +82,7 @@ namespace Dronewebshop.Persistence
             MySqlDataReader dtr1 = cmd1.ExecuteReader();
             if (dtr1.HasRows)
             {
+                //Het aantal producten die er in het winkelmandje zitten wordt aangepast in de databank
                 MySqlConnection conn2 = new MySqlConnection(connStr);
                 conn2.Open();
                 string qry = "update tblwinkelmand set Aantal=(Aantal+" + winkelmandItem.Aantal + ") where KlantNr=" + winkelmandItem.KlantID + " and ArtNr=" + winkelmandItem.ArtNr;
@@ -87,7 +92,7 @@ namespace Dronewebshop.Persistence
 
                 MySqlConnection conn3 = new MySqlConnection(connStr);
                 conn3.Open();
-
+                //De voorraad van het product wordt gewijzigd zodra deze in het winkelmandje gestoken wordt.
                 string qry2 = "update tblproducten set Voorraad=(voorraad-" + winkelmandItem.Aantal + ") where ArtNr=" + winkelmandItem.ArtNr;
                 MySqlCommand cmd3 = new MySqlCommand(qry2, conn3);
                 cmd3.ExecuteNonQuery();
@@ -95,6 +100,8 @@ namespace Dronewebshop.Persistence
             }
             else
             {
+                //Als dit product zich nog niet in het winkemandje bevindt of het winkelmandje is leeg dan wordt deze code uitgevoerd.
+                //Hieronder wordt het product toegevoegd.
                 MySqlConnection conn2 = new MySqlConnection(connStr);
                 conn2.Open();
 
@@ -103,7 +110,8 @@ namespace Dronewebshop.Persistence
 
                 cmd2.ExecuteNonQuery();
                 conn2.Close();
-
+                
+                //Hier wordt de voorraad aangepast.
                 MySqlConnection conn3 = new MySqlConnection(connStr);
                 conn3.Open();
 
@@ -115,6 +123,7 @@ namespace Dronewebshop.Persistence
             conn1.Close();
         }
 
+        //We tonen en vullen het winkelmandje met de informatie die we hierboven hebben gekregen.
         public List<WinkelmandItem> loadWinkelitems(int KlantNr)
         {
             MySqlConnection conn = new MySqlConnection(connStr);
@@ -139,6 +148,7 @@ namespace Dronewebshop.Persistence
             return list;
         }
 
+        //De gebruiker wordt opgehaald zodat de informatie overeen komt voor een specifieke gebruiker.
         public Gebruiker haalGebruiker(int KlantNr)
         {
             MySqlConnection conn = new MySqlConnection(connStr);
@@ -160,6 +170,7 @@ namespace Dronewebshop.Persistence
             return gebruiker;
         }
 
+        //Als er op het vuilnisbakje geklikt wordt gaat deze code uitgevoerd worden en ervoor zorgen dat de voorraad terug aangepast wordt en het product uit het winkelmandje verdwijnt.
         public void Verwijder (WinkelmandItem winkelmandItem)
         {
             MySqlConnection con = new MySqlConnection(connStr);
@@ -176,8 +187,10 @@ namespace Dronewebshop.Persistence
             conn.Close();
         }
 
+        //We maken het order aan.
         public Order maakOrder(int KlantNr)
         {
+            //De datum en het klantNr worden doorgegeven.
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
             string qry = "insert into tblorder (orderdatum,klantnr) values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + KlantNr + "')";
@@ -185,6 +198,7 @@ namespace Dronewebshop.Persistence
             cmd.ExecuteNonQuery();
             conn.Close();
 
+            //Het order krijgt een unieke ID.
             MySqlConnection con = new MySqlConnection(connStr);
             con.Open();
             string qry1 = "select max(ordernr) as laatste from tblorder where klantnr=" + KlantNr;
@@ -197,6 +211,7 @@ namespace Dronewebshop.Persistence
             }
             con.Close();
             
+            //De informatie uit het winkelmandje wordt opgehaald.
             MySqlConnection conn2 = new MySqlConnection(connStr);
             conn2.Open();
             string qry2 = "select tblwinkelmand.ArtNr,Aantal,Prijs from tblwinkelmand inner join tblproducten on tblwinkelmand.ArtNr = tblproducten.ArtNr where klantnr=" + KlantNr;
@@ -215,6 +230,7 @@ namespace Dronewebshop.Persistence
 
             foreach (var wmi in lijst)
             {
+                //Per product in winkelmand wordt de informatie bijgehouden in het order.
                 MySqlConnection conn3 = new MySqlConnection(connStr);
                 conn3.Open();
                 string corrPrijs = wmi.Prijs.ToString();
@@ -225,6 +241,7 @@ namespace Dronewebshop.Persistence
                 conn3.Close();  
             }
 
+            //De totale prijs van de specifieke klant wordt berekend en 
             MySqlConnection conn5 = new MySqlConnection(connStr);
             conn5.Open();
             string qry5 = "select (sum(aantal*prijs)*1.21) as totaal from tblwinkelmand inner join tblproducten on tblwinkelmand.ArtNr = tblproducten.ArtNr where klantNr = " + KlantNr;
@@ -238,6 +255,7 @@ namespace Dronewebshop.Persistence
             conn5.Close();
             order.OrderNr = OrderNr;
 
+            //Als er iets besteld is wordt alles uit het winkelmandje verwijdert.
             MySqlConnection conn4 = new MySqlConnection(connStr);
             conn4.Open();
             string qry4 = "delete from tblwinkelmand where klantnr=" + KlantNr;
@@ -245,6 +263,7 @@ namespace Dronewebshop.Persistence
             cmd4.ExecuteNonQuery();
             conn4.Close();
 
+            //Het mailadres van de klant wordt opgehaald uit de databank.
             MySqlConnection conn6 = new MySqlConnection(connStr);
             conn6.Open();
             string qry6 = "select Email from tblklanten where klantnr=" + KlantNr;
@@ -268,6 +287,7 @@ namespace Dronewebshop.Persistence
             return order;
         }
 
+        //De logingegevens worden nagekeken en als deze juist zijn mag de klant naar de webshop verwezen worden.
         public int checkCredentials(LoginCredentials loginCredentials)
         {
             MySqlConnection mySqlConnection = new MySqlConnection(connStr);

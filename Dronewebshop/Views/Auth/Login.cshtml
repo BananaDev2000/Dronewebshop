@@ -15,18 +15,17 @@
     <h1 class="centreren">Droneshop.be - Aanmeldpagina</h1>
         <table class="centreren" >
             <tr>
-                <td>    Gebruikersnaam: </td>
-                <td class="centreren"><input type="text" asp-for="gebruikersnaam"/></td>
-                <span asp-validation-for="gebruikersnaam"></span>
+                <td>Gebruikersnaam: </td>
+                <td class="centreren"><input type="text" asp-for="gebruikersnaam"/><span class="fout padding" asp-validation-for="gebruikersnaam"></span></td>
+                
             </tr>
             <tr>
                 <td>Wachtwoord: </td>
-                <td class="centreren"><input type="password" asp-for="wachtwoord"/></td>
-                <span asp-validation-for="wachtwoord"></span>
+                <td class="centreren"><input type="password" asp-for="wachtwoord"/><span class="fout padding" asp-validation-for="wachtwoord"></span></td>
             </tr>
         </table>
         <p class="centreren"><input type="submit" value="Meld aan..."/></p>
-        @ViewBag.fout
+        <p class="centreren fout">@ViewBag.fout</p>
     </form>
 </body>
 </html>

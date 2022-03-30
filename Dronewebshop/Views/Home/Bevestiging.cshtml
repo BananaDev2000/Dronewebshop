@@ -10,12 +10,14 @@
     <title>Bevestiging</title>
 </head>
 <body> 
-    <h1>Droneshop.be - Bestelbevestiging</h1>
+    <h1  class="centreren">Droneshop.be - Bestelbevestiging</h1>
+    <div class="pdiv">
     <p>We hebben uw bestelling met bestelnummer<strong> @Model.OrderNr </strong>goed ontvangen.</p>
-    <p>Na overschrijving van<strong> @Model.totaal </strong>op rekeningnummer <strong>BE12 3442 0694 2069</strong> worden de goederen verpakt en verstuurd.</p>
+    <p>Na overschrijving van<strong>€ @Model.totaal </strong>op rekeningnummer <strong>BE12 3442 0694 2069</strong> worden de goederen verpakt en verstuurd.</p>
     <p>U ontving deze bevestiging ook via e-mail.</p>
     <p>Bedankt voor uw vertouwen!</p>
     <p>M. Royer en F. Timmermans</p>
+    </div>
     <p class="text-center"><a asp-action="Index">Terug naar catalogus</a></p>
 </body>
 </html>

@@ -12,12 +12,14 @@ namespace Dronewebshop.Controllers
     {
 
         PersistenceCode pc = new PersistenceCode();
-
+        // Login pagina wordt geladen.
         public IActionResult Login()
         {
             return View();
         }
 
+        // Er wordt gekeken of gebruikersnaam en wachtwoord overeenkomen in de databank.
+        // Als dit zo is dan wordt de gebruik ingelogd en wordt zijn ID bijgehouden.
         [HttpPost]
         public IActionResult Login(LoginCredentials LC)
         {
@@ -48,6 +50,7 @@ namespace Dronewebshop.Controllers
             }
         }
 
+        // De gebruiker wordt uitgelogd.
         [HttpGet]
         public IActionResult Logout()
         {

@@ -1,5 +1,12 @@
+p
+{
+    text-align:left;
+}
 
-
+#test
+{
+    color:olive;
+}
 
 .fout {
     color: red;
@@ -34,6 +41,12 @@ strong {
     color: olive;
 }
 
+.Totalen 
+{
+    position:absolute;
+    right:179px;
+}
+
 .centreren {
     text-align: center;
     margin: auto;
@@ -47,4 +60,27 @@ body {
 td {
     color: #062C30;
     font-family: monospace
+}
+
+.padding {
+    padding: 15px;
+}
+
+.ToevoegenDiv
+{
+    margin:auto;
+    width:1100px;
+}
+
+.Tussenbalk
+{
+    height:35px;
+    width:100%;
+}
+
+.pdiv {
+    text-align: center;
+    margin: auto;
+    padding: 15px;
+    width:45%;
 }

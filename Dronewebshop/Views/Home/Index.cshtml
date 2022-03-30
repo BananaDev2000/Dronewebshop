@@ -15,7 +15,7 @@
 
     <form asp-action="WinkelmandReturn" asp-controller="Home">
         <table class="table">
-        <tr class="bg-primary">
+        <tr class="">
             <td>ArtNr</td>
             <td>Naam</td>
             <td>Foto</td>
@@ -29,7 +29,7 @@
                     <td>@product.ArtNr</td>
                     <td>@product.Naam</td>
                     <td><img class="fotocat" src="@Url.Content("~/images/" + product.Fotonaam + ".jpg")"/></td>
-                    <td>@product.Prijs</td>
+                    <td>€ @product.Prijs</td>
                     <td>@product.Voorraad</td>
                     <td>
                         @if (product.Voorraad >0)

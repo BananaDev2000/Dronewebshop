@@ -3,9 +3,9 @@ namespace Dronewebshop.Models
 {
     public class LoginCredentials
     {
-        [Required(ErrorMessage = "Verplicht :D")]
+        [Required(ErrorMessage = "Verplicht veld.")]
         public string gebruikersnaam { get; set; }
-        [Required(ErrorMessage = "Verplicht :D")]
+        [Required(ErrorMessage = "Verplicht veld.")]
         public string wachtwoord { get; set; }
 
     }
